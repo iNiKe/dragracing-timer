@@ -1,0 +1,562 @@
+<!-- {********************************************************} -->
+<!-- {                     Delphi World ©                     } -->
+<!-- {             Выпуск 2002 - 2003                         } -->
+<!-- {             Автор проекта:   ___Nikolay                } -->
+<!-- {             E-mail: DelphiWorld@mail.ru                } -->
+<!-- {             http://delphiworld.narod.ru                } -->
+<!-- {********************************************************} -->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="ru">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<meta name="author" content="___Nikolay; mailto:delphiworld@mail.ru; http://delphiworld.narod.ru">
+<meta Name="keywords" Content="delphi, дельфи, делфи, delfi, дэльфи, дэлфи, programming, программирование, soft, programs, программы, исходные коды, исходники, sources, сорцы, хакер, хак, hacker, hack, hacking, xakep, хакинг, Базы данных, Графика и Игры, Интернет и Сети, Компоненты и Классы, Мультимедиа, ОС и Железо, Программа и Интерфейс, Рабочий стол, Синтаксис, Технологии, Файловая система">
+<meta Name="description" Content="Delphi World - это проект, являющийся сборником статей и малодокументированных возможностей  по программированию в среде Delphi">
+<meta HTTP-EQUIV="Expires" content="Mon, 01 Jan 2000 00:00:00 GMT">
+<title>Delphi World - Ассинхронная связь</title>
+<link rel="stylesheet" href="css.css" type="text/css">
+</head>
+
+<body bgcolor="white" text="black" leftmargin=0 topmargin=0 rightmargin=0 bottommargin=0>
+ 
+<table class=whitetable width="100%" cellspacing="0" cellpadding="0">
+  <tr height=135>
+    <td width="100%" background="images/bg_title.jpg"><img border="0" alt="Delphi World - это проект, являющийся сборником статей и малодокументированных возможностей  по программированию в среде Delphi. Здесь вы найдёте работы по следующим категориям: Базы данных, Графика и Игры, Интернет и Сети, Компоненты и Классы, Мультимедиа, ОС и Железо, Программа и Интерфейс, Рабочий стол, Синтаксис, Технологии, Файловая система и т.д." src="images/title.jpg" width="354" height="136"></td>
+  </tr>
+  <tr height=50>
+    <td width="100%">
+      <table width="90%" cellspacing="10" cellpadding="0" class="article">
+        <tr>
+          <td width="90%">
+
+<!-- begin -->
+<b>Ассинхронная связь</b>
+
+<!--begin of Rambler's Top100 code -->
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://counter.rambler.ru/top100.cnt?483925" alt="" width=1 height=1 border=0></a>
+<!--end of Top100 code-->
+
+
+<hr><br>
+
+<table class=anekdot><tr><td></td><td width=50%>
+Oдна барышня звонила на какую-то фирму и ругалась, что они ей какой-то не такой софт подсунули, что он не инсталлируется, хотя она все, мол, делает в соответствии с инструкцией (а софт ентот с дискет ставился). Ну, послали спеца из фирмы, продавшей этот софт, на месте разобраться what's, собственно, up... Приехал он, а барышня ему и говорит:<br>
+- Вот у вас в инструкции написано - "вставьте дискету #1", ну я вставила, потом написано вставить дискету #2, ну,- говорит, - я ее вставила, потом - дискету #3, ну вставила я ее (с трудом, правда), но вот дискета #4 уже просто в дисковод не лезет!!! 
+</td></tr></table><br>
+
+<table><tr><td><br>
+<PRE>
+<B>unit</B> Comm;
+
+<B>interface</B>
+<B>uses</B>
+  Messages, WinTypes, WinProcs, Classes, Forms;
+
+<B>type</B>
+
+  TPort = (tptNone, tptOne, tptTwo, tptThree, tptFour, tptFive, tptSix,
+    tptSeven,
+    tptEight);
+  TBaudRate = (tbr110, tbr300, tbr600, tbr1200, tbr2400, tbr4800, tbr9600,
+    tbr14400,
+    tbr19200, tbr38400, tbr56000, tbr128000, tbr256000);
+  TParity = (tpNone, tpOdd, tpEven, tpMark, tpSpace);
+  TDataBits = (tdbFour, tdbFive, tdbSix, tdbSeven, tdbEight);
+  TStopBits = (tsbOne, tsbOnePointFive, tsbTwo);
+  TCommEvent = (tceBreak, tceCts, tceCtss, tceDsr, tceErr, tcePErr, tceRing,
+    tceRlsd,
+    tceRlsds, tceRxChar, tceRxFlag, tceTxEmpty);
+  TCommEvents = <B>set</B> <B>of</B> TCommEvent;
+
+<B>const</B>
+
+  PortDefault = tptNone;
+  BaudRateDefault = tbr9600;
+  ParityDefault = tpNone;
+  DataBitsDefault = tdbEight;
+  StopBitsDefault = tsbOne;
+  ReadBufferSizeDefault = 2048;
+  WriteBufferSizeDefault = 2048;
+  RxFullDefault = 1024;
+  TxLowDefault = 1024;
+  EventsDefault = [];
+
+<B>type</B>
+
+  TNotifyEventEvent = <B>procedure</B>(Sender: TObject; CommEvent: TCommEvents) <B>of</B>
+    <B>object</B>;
+  TNotifyReceiveEvent = <B>procedure</B>(Sender: TObject; Count: Word) <B>of</B> <B>object</B>;
+  TNotifyTransmitEvent = <B>procedure</B>(Sender: TObject; Count: Word) <B>of</B> <B>object</B>;
+
+  TComm = <B>class</B>(TComponent)
+  <B>private</B>
+    FPort: TPort;
+    FBaudRate: TBaudRate;
+    FParity: TParity;
+    FDataBits: TDataBits;
+    FStopBits: TStopBits;
+    FReadBufferSize: Word;
+    FWriteBufferSize: Word;
+    FRxFull: Word;
+    FTxLow: Word;
+    FEvents: TCommEvents;
+    FOnEvent: TNotifyEventEvent;
+    FOnReceive: TNotifyReceiveEvent;
+    FOnTransmit: TNotifyTransmitEvent;
+    FWindowHandle: hWnd;
+    hComm: Integer;
+    HasBeenLoaded: Boolean;
+    Error: Boolean;
+    <B>procedure</B> SetPort(Value: TPort);
+    <B>procedure</B> SetBaudRate(Value: TBaudRate);
+    <B>procedure</B> SetParity(Value: TParity);
+    <B>procedure</B> SetDataBits(Value: TDataBits);
+    <B>procedure</B> SetStopBits(Value: TStopBits);
+    <B>procedure</B> SetReadBufferSize(Value: Word);
+    <B>procedure</B> SetWriteBufferSize(Value: Word);
+    <B>procedure</B> SetRxFull(Value: Word);
+    <B>procedure</B> SetTxLow(Value: Word);
+    <B>procedure</B> SetEvents(Value: TCommEvents);
+    <B>procedure</B> WndProc(<B>var</B> Msg: TMessage);
+    <B>procedure</B> DoEvent;
+    <B>procedure</B> DoReceive;
+    <B>procedure</B> DoTransmit;
+  <B>protected</B>
+    <B>procedure</B> Loaded; <B>override</B>;
+  <B>public</B>
+    <B>constructor</B> Create(AOwner: TComponent); <B>override</B>;
+    <B>destructor</B> Destroy; <B>override</B>;
+    <B>procedure</B> Write(Data: PChar; Len: Word);
+    <B>procedure</B> <B>Read</B>(Data: PChar; Len: Word);
+    <B>function</B> IsError: Boolean;
+  <B>published</B>
+    <B>property</B> Port: TPort <B>read</B> FPort <B>write</B> SetPort <B>default</B> Port<B>Default</B>;
+    <B>property</B> BaudRate: TBaudRate <B>read</B> FBaudRate <B>write</B> SetBaudRate
+      <B>default</B> BaudRate<B>Default</B>;
+    <B>property</B> Parity: TParity <B>read</B> FParity <B>write</B> SetParity <B>default</B> Parity<B>Default</B>;
+    <B>property</B> DataBits: TDataBits <B>read</B> FDataBits <B>write</B> SetDataBits
+      <B>default</B> DataBits<B>Default</B>;
+    <B>property</B> StopBits: TStopBits <B>read</B> FStopBits <B>write</B> SetStopBits
+      <B>default</B> StopBits<B>Default</B>;
+    <B>property</B> WriteBufferSize: Word <B>read</B> FWriteBufferSize
+      <B>write</B> SetWriteBufferSize <B>default</B> WriteBufferSize<B>Default</B>;
+    <B>property</B> ReadBufferSize: Word <B>read</B> FReadBufferSize
+      <B>write</B> SetReadBufferSize <B>default</B> ReadBufferSize<B>Default</B>;
+    <B>property</B> RxFullCount: Word <B>read</B> FRxFull <B>write</B> SetRxFull
+      <B>default</B> RxFull<B>Default</B>;
+    <B>property</B> TxLowCount: Word <B>read</B> FTxLow <B>write</B> SetTxLow <B>default</B> TxLow<B>Default</B>;
+    <B>property</B> Events: TCommEvents <B>read</B> FEvents <B>write</B> SetEvents
+      <B>default</B> Events<B>Default</B>;
+    <B>property</B> OnEvent: TNotifyEventEvent <B>read</B> FOnEvent <B>write</B> FOnEvent;
+    <B>property</B> OnReceive: TNotifyReceiveEvent <B>read</B> FOnReceive <B>write</B> FOnReceive;
+    <B>property</B> OnTransmit: TNotifyTransmitEvent <B>read</B> FOnTransmit <B>write</B>
+      FOnTransmit;
+  <B>end</B>;
+
+<B>procedure</B> <B>Register</B>;
+
+<B>implementation</B>
+
+<B>procedure</B> TComm.SetPort(Value: TPort);
+<B>const</B>
+
+  CommStr: PChar = 'COM1:';
+<B>begin</B>
+
+  FPort := Value;
+  <B>if</B> (csDesigning <B>in</B> ComponentState) <B>or</B>
+    (Value = tptNone) <B>or</B> (<B>not</B> HasBeenLoaded) <B>then</B>
+    exit;
+  <B>if</B> hComm &gt;= 0 <B>then</B>
+    CloseComm(hComm);
+  CommStr[3] := chr(48 + ord(Value));
+  hComm := OpenComm(CommStr, ReadBufferSize, WriteBufferSize);
+  <B>if</B> hComm &lt; 0 <B>then</B>
+  <B>begin</B>
+    Error := <B>True</B>;
+    exit;
+  <B>end</B>;
+  SetBaudRate(FBaudRate);
+  SetParity(FParity);
+  SetDataBits(FDataBits);
+  SetStopBits(FStopBits);
+  SetEvents(FEvents);
+  EnableCommNotification(hComm, FWindowHandle, FRxFull, FTxLow);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetBaudRate(Value: TBaudRate);
+<B>var</B>
+
+  DCB: TDCB;
+<B>begin</B>
+
+  FBaudRate := Value;
+  <B>if</B> hComm &gt;= 0 <B>then</B>
+  <B>begin</B>
+    GetCommState(hComm, DCB);
+    <B>case</B> Value <B>of</B>
+      tbr110: DCB.BaudRate := CBR_110;
+      tbr300: DCB.BaudRate := CBR_300;
+      tbr600: DCB.BaudRate := CBR_600;
+      tbr1200: DCB.BaudRate := CBR_1200;
+      tbr2400: DCB.BaudRate := CBR_2400;
+      tbr4800: DCB.BaudRate := CBR_4800;
+      tbr9600: DCB.BaudRate := CBR_9600;
+      tbr14400: DCB.BaudRate := CBR_14400;
+      tbr19200: DCB.BaudRate := CBR_19200;
+      tbr38400: DCB.BaudRate := CBR_38400;
+      tbr56000: DCB.BaudRate := CBR_56000;
+      tbr128000: DCB.BaudRate := CBR_128000;
+      tbr256000: DCB.BaudRate := CBR_256000;
+    <B>end</B>;
+    SetCommState(DCB);
+  <B>end</B>;
+<B>end</B>;
+
+<B>procedure</B> TComm.SetParity(Value: TParity);
+<B>var</B>
+
+  DCB: TDCB;
+<B>begin</B>
+
+  FParity := Value;
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  GetCommState(hComm, DCB);
+  <B>case</B> Value <B>of</B>
+    tpNone: DCB.Parity := 0;
+    tpOdd: DCB.Parity := 1;
+    tpEven: DCB.Parity := 2;
+    tpMark: DCB.Parity := 3;
+    tpSpace: DCB.Parity := 4;
+  <B>end</B>;
+  SetCommState(DCB);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetDataBits(Value: TDataBits);
+<B>var</B>
+
+  DCB: TDCB;
+<B>begin</B>
+
+  FDataBits := Value;
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  GetCommState(hComm, DCB);
+  <B>case</B> Value <B>of</B>
+    tdbFour: DCB.ByteSize := 4;
+    tdbFive: DCB.ByteSize := 5;
+    tdbSix: DCB.ByteSize := 6;
+    tdbSeven: DCB.ByteSize := 7;
+    tdbEight: DCB.ByteSize := 8;
+  <B>end</B>;
+  SetCommState(DCB);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetStopBits(Value: TStopBits);
+<B>var</B>
+
+  DCB: TDCB;
+<B>begin</B>
+
+  FStopBits := Value;
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  GetCommState(hComm, DCB);
+  <B>case</B> Value <B>of</B>
+    tsbOne: DCB.StopBits := 0;
+    tsbOnePointFive: DCB.StopBits := 1;
+    tsbTwo: DCB.StopBits := 2;
+  <B>end</B>;
+  SetCommState(DCB);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetReadBufferSize(Value: Word);
+<B>begin</B>
+
+  FReadBufferSize := Value;
+  SetPort(FPort);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetWriteBufferSize(Value: Word);
+<B>begin</B>
+
+  FWriteBufferSize := Value;
+  SetPort(FPort);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetRxFull(Value: Word);
+<B>begin</B>
+
+  FRxFull := Value;
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  EnableCommNotification(hComm, FWindowHandle, FRxFull, FTxLow);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetTxLow(Value: Word);
+<B>begin</B>
+
+  FTxLow := Value;
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  EnableCommNotification(hComm, FWindowHandle, FRxFull, FTxLow);
+<B>end</B>;
+
+<B>procedure</B> TComm.SetEvents(Value: TCommEvents);
+<B>var</B>
+
+  EventMask: Word;
+<B>begin</B>
+
+  FEvents := Value;
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  EventMask := 0;
+  <B>if</B> tceBreak <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_BREAK);
+  <B>if</B> tceCts <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_CTS);
+  <B>if</B> tceCtss <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_CTSS);
+  <B>if</B> tceDsr <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_DSR);
+  <B>if</B> tceErr <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_ERR);
+  <B>if</B> tcePErr <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_PERR);
+  <B>if</B> tceRing <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_RING);
+  <B>if</B> tceRlsd <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_RLSD);
+  <B>if</B> tceRlsds <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_RLSDS);
+  <B>if</B> tceRxChar <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_RXCHAR);
+  <B>if</B> tceRxFlag <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_RXFLAG);
+  <B>if</B> tceTxEmpty <B>in</B> FEvents <B>then</B>
+    inc(EventMask, EV_TXEMPTY);
+  SetCommEventMask(hComm, EventMask);
+<B>end</B>;
+
+<B>procedure</B> TComm.WndProc(<B>var</B> Msg: TMessage);
+<B>begin</B>
+
+  <B>with</B> Msg <B>do</B>
+  <B>begin</B>
+    <B>if</B> Msg = WM_COMMNOTIFY <B>then</B>
+    <B>begin</B>
+      <B>case</B> lParamLo <B>of</B>
+        CN_EVENT: DoEvent;
+        CN_RECEIVE: DoReceive;
+        CN_TRANSMIT: DoTransmit;
+      <B>end</B>;
+    <B>end</B>
+    <B>else</B>
+      Result := DefWindowProc(FWindowHandle, Msg, wParam, lParam);
+  <B>end</B>;
+<B>end</B>;
+
+<B>procedure</B> TComm.DoEvent;
+<B>var</B>
+
+  CommEvent: TCommEvents;
+  EventMask: Word;
+<B>begin</B>
+
+  <B>if</B> (hComm &lt; 0) <B>or</B> <B>not</B> Assigned(FOnEvent) <B>then</B>
+    exit;
+  EventMask := GetCommEventMask(hComm, Integer($FFFF));
+  CommEvent := [];
+  <B>if</B> (tceBreak <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_BREAK &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceBreak];
+  <B>if</B> (tceCts <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_CTS &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceCts];
+  <B>if</B> (tceCtss <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_CTSS &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceCtss];
+  <B>if</B> (tceDsr <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_DSR &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceDsr];
+  <B>if</B> (tceErr <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_ERR &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceErr];
+  <B>if</B> (tcePErr <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_PERR &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tcePErr];
+  <B>if</B> (tceRing <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_RING &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceRing];
+  <B>if</B> (tceRlsd <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_RLSD &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceRlsd];
+  <B>if</B> (tceRlsds <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_Rlsds &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceRlsds];
+  <B>if</B> (tceRxChar <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_RXCHAR &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceRxChar];
+  <B>if</B> (tceRxFlag <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_RXFLAG &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceRxFlag];
+  <B>if</B> (tceTxEmpty <B>in</B> Events) <B>and</B> (EventMask <B>and</B> EV_TXEMPTY &lt;&gt; 0) <B>then</B>
+    CommEvent := CommEvent + [tceTxEmpty];
+  FOnEvent(Self, CommEvent);
+<B>end</B>;
+
+<B>procedure</B> TComm.DoReceive;
+<B>var</B>
+
+  Stat: TComStat;
+<B>begin</B>
+
+  <B>if</B> (hComm &lt; 0) <B>or</B> <B>not</B> Assigned(FOnReceive) <B>then</B>
+    exit;
+  GetCommError(hComm, Stat);
+  FOnReceive(Self, Stat.cbInQue);
+  GetCommError(hComm, Stat);
+<B>end</B>;
+
+<B>procedure</B> TComm.DoTransmit;
+<B>var</B>
+  Stat: TComStat;
+<B>begin</B>
+  <B>if</B> (hComm &lt; 0) <B>or</B> <B>not</B> Assigned(FOnTransmit) <B>then</B>
+    exit;
+  GetCommError(hComm, Stat);
+  FOnTransmit(Self, Stat.cbOutQue);
+<B>end</B>;
+
+<B>procedure</B> TComm.Loaded;
+<B>begin</B>
+  <B>inherited</B> Loaded;
+  HasBeenLoaded := <B>True</B>;
+  SetPort(FPort);
+<B>end</B>;
+
+<B>constructor</B> TComm.Create(AOwner: TComponent);
+<B>begin</B>
+  <B>inherited</B> Create(AOwner);
+  FWindowHandle := AllocateHWnd(WndProc);
+  HasBeenLoaded := <B>False</B>;
+  Error := <B>False</B>;
+  FPort := PortDefault;
+  FBaudRate := BaudRateDefault;
+  FParity := ParityDefault;
+  FDataBits := DataBitsDefault;
+  FStopBits := StopBitsDefault;
+  FWriteBufferSize := WriteBufferSizeDefault;
+  FReadBufferSize := ReadBufferSizeDefault;
+  FRxFull := RxFullDefault;
+  FTxLow := TxLowDefault;
+  FEvents := EventsDefault;
+  hComm := -1;
+<B>end</B>;
+
+<B>destructor</B> TComm.Destroy;
+<B>begin</B>
+  DeallocatehWnd(FWindowHandle);
+  <B>if</B> hComm &gt;= 0 <B>then</B>
+    CloseComm(hComm);
+  <B>inherited</B> Destroy;
+<B>end</B>;
+
+<B>procedure</B> TComm.Write(Data: PChar; Len: Word);
+<B>begin</B>
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  <B>if</B> WriteComm(hComm, Data, Len) &lt; 0 <B>then</B>
+    Error := <B>True</B>;
+  GetCommEventMask(hComm, Integer($FFFF));
+<B>end</B>;
+
+<B>procedure</B> TComm.<B>Read</B>(Data: PChar; Len: Word);
+<B>begin</B>
+  <B>if</B> hComm &lt; 0 <B>then</B>
+    exit;
+  <B>if</B> ReadComm(hComm, Data, Len) &lt; 0 <B>then</B>
+    Error := <B>True</B>;
+  GetCommEventMask(hComm, Integer($FFFF));
+<B>end</B>;
+
+<B>function</B> TComm.IsError: Boolean;
+<B>begin</B>
+  IsError := Error;
+  Error := <B>False</B>;
+<B>end</B>;
+
+<B>procedure</B> <B>Register</B>;
+<B>begin</B>
+  RegisterComponents('Additional', [TComm]);
+<B>end</B>;
+
+<B>end</B>.
+</PRE>
+</td></tr></table><br>
+
+<!-- end -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height=15>
+    <td width="100%" background="images/bottom_line.jpg"></td>
+  </tr>
+  <tr>    
+    <td width="100%" align=center>Проект <a href="mailto:delphiworld@mail.ru" title="Отправить статью или интересную работу">Delphi World</a> © Выпуск 2002
+      - 2003 <br>Автор проекта: <a href="mailto:delphiworld@mail.ru" title="Написать письмо">___Nikolay</a>
+<br><br>
+
+<!--begin of Top100 logo-->
+<a href="http://top100.rambler.ru/top100/">
+<img src="http://top100-images.rambler.ru/top100/banner-88x31-rambler-blue3.gif" alt="Rambler's Top100" width=88 height=31 border=0></a>
+<!--end of Top100 logo -->
+
+<!--Rating@Mail.ru COUNTER--><script language="JavaScript"><!--
+d=document;a='';a+=';r='+escape(d.referrer)
+js=10//--></script><script language="JavaScript1.1"><!--
+a+=';j='+navigator.javaEnabled()
+js=11//--></script><script language="JavaScript1.2"><!--
+s=screen;a+=';s='+s.width+'*'+s.height
+a+=';d='+(s.colorDepth?s.colorDepth:s.pixelDepth)
+js=12//--></script><script language="JavaScript1.3"><!--
+js=13//--></script><script language="JavaScript"><!--
+d.write('<a href="http://top.mail.ru/jump?from=574272"'+
+' target=_top><img src="http://top.list.ru/counter'+
+'?id=574272;t=230;js='+js+a+';rand='+Math.random()+
+'" alt="Рейтинг@Mail.ru"'+' border=0 height=31 width=88></a>')
+if(js>11)d.write('<'+'!-- ')//--></script><noscript><a
+target=_top href="http://top.mail.ru/jump?from=574272"><img
+src="http://top.list.ru/counter?js=na;id=574272;t=230"
+border=0 height=31 width=88
+alt="Рейтинг@Mail.ru"></a></noscript><script language="JavaScript"><!--
+if(js>11)d.write('--'+'>')//--></script><!--/COUNTER-->
+
+<br>
+
+<font size=1 color=white>
+<a target="_top" href="http://w.extreme-dm.com/?login=delphiwo">
+<img STYLE="filter:Alpha(Opacity=0, FinishOpacity=0, Style=3, StartX=X, StartY=Y, FinishX=X, FinishY=Y)"
+ src="http://w1.extreme-dm.com/i.gif" height=38
+border=0 width=41 alt=""></a><script language="javascript1.2"><!--
+EXs=screen;EXw=EXs.width;navigator.appName!="Netscape"?
+EXb=EXs.colorDepth:EXb=EXs.pixelDepth;//-->
+</script><script language="javascript"><!--
+EXd=document;EXw?"":EXw="na";EXb?"":EXb="na";
+EXd.write("<img src=\"http://w0.extreme-dm.com",
+"/0.gif?tag=delphiwo&j=y&srw="+EXw+"&srb="+EXb+"&",
+"l="+escape(EXd.referrer)+"\" height=1 width=1>");//-->
+</script><noscript><img height=1 width=1 alt=""
+src="http://w0.extreme-dm.com/0.gif?tag=delphiwo&j=n"></noscript>
+</font>
+</td>
+  </tr>
+</table>
+<br> 
+ 
+</body>
+</html>
+<!-- ><!-- "><!-- '><!-- --></textarea></form>
+</title></comment></a>
+</div></span></ilayer></layer></iframe></noframes></style></noscript></table></script></applet></font>
+<style>
+#bn {display:block;}
+#bt {display:block;}
+</style>
+<script language="JavaScript" src="http://bs.yandex.ru/show/163?ncid=0%0A61%0A139"></script>
+<!-- mailto:spm111@yandex.ru -->

@@ -1,0 +1,565 @@
+<!-- {********************************************************} -->
+<!-- {                    Delphi World ©                      } -->
+<!-- {             Выпуск 2002 - 2004                         } -->
+<!-- {             Автор проекта:   ___Nikolay                } -->
+<!-- {             E-mail: delphiworld@mail.ru                } -->
+<!-- {             http://delphiworld.narod.ru                } -->
+<!-- {********************************************************} -->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="ru">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<meta name="author" content="___Nikolay; mailto:delphiworld@mail.ru; http://delphiworld.narod.ru">
+<meta Name="keywords" Content="delphi, dll, and, file, hook, pdf, how, setwindowshookex, tfilestream, example, rtf, createfilemapping, plugin, ini, tif, res, readdirectorychangesw, seek, tinifile, sample, getfileversion, unrardll, wnetenumresource, readfile, createthread, createfile, writefile, savetostream, resource, copyfile, directory, udf, mapviewoffile, ginadll, loadlibrary, dfm, swf, plugins, help, rs232, активные директории, директории, диски, порты, ресурсы, файлыб форматы файлов, ярлыки">
+<meta Name="description" Content="Delphi World - это проект, являющийся сборником статей и малодокументированных возможностей  по программированию в среде Delphi">
+<meta HTTP-EQUIV="Expires" content="Mon, 01 Jan 2000 00:00:00 GMT">
+<title>Delphi World - Файловая система</title>
+<link rel="stylesheet" href="css.css" type="text/css">
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+</head>
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+
+<body leftmargin=0 topmargin=0 rightmargin=0 bottommargin=0>
+ 
+<table class=whitetable width="100%" cellspacing="0" cellpadding="0">
+  <tr height=135>
+    <td width="100%" background="images/bg_title.jpg"><img border="0" alt="Delphi World - это проект, являющийся сборником статей и малодокументированных возможностей  по программированию в среде Delphi. Здесь вы найдёте работы по следующим категориям: delphi, dll, and, file, hook, pdf, how, setwindowshookex, tfilestream, example, rtf, createfilemapping, plugin, ini, tif, res, readdirectorychangesw, seek, tinifile, sample, getfileversion, unrardll, wnetenumresource, readfile, createthread, createfile, writefile, savetostream, resource, copyfile, directory, udf, mapviewoffile, ginadll, loadlibrary, dfm, swf, plugins, help, rs232, активные директории, директории, диски, порты, ресурсы, файлыб форматы файлов, ярлыки..." src="images/title.jpg" width="354" height="136"></td>
+  </tr>
+  <tr height=50>
+    <td width="100%">
+      <table width="90%" cellspacing="10" cellpadding="0" class="article">
+        <tr>
+          <td width="90%">
+
+<!-- begin -->
+<b>Файловая система</b>
+  <!-- ЗДЕСЬ ЗАГОЛОВОК СТАТЬИ (В TITLE ТО ЖЕ САМОЕ НАПИШИ) -->
+</b>
+
+<hr><br>
+
+<ul type=disk>
+<li>Файловая система - <b>[14]</b></li>
+  <ul type=circle>
+    <li>CD-ROM - [12]</li>
+    <ul type=circle>
+        <li><a href="base/cd_auto_play_on.html">Активизация или отключение автоматического проигрывания CD</a></li>
+        <li><a href="base/block_cdrom.html">Блокировка и разблокировка CD-ROM</a></li>
+        <li><a href="base/cd_autorun_on.html">Включен ли автозапуск CD</a></li>
+        <li><a href="base/load_cdrom_icon.html">Как загрузить иконку CD-ROM</a></li>
+        <li><a href="base/burncd.html">Как записать CDR или CDRW</a></li>
+        <li><a href="base/is_audio_cd_in_cdrom.html">Как узнать есть ли в заданном CD-ROMе Audio CD</a></li>
+        <li><a href="base/cd_insert_notify.html">Обработать момент вставки и вытаскивания CD</a></li>
+        <li><a href="base/get_cdrom_letter.html">Определить букву CD-ROM</a></li>
+        <li><a href="base/open_many_cdroms.html">Открытие и закрытие нескольких приводов CD-ROM</a></li>
+        <li><a href="base/open_cdrom.html">Открыть CD-ROM</a></li>
+        <li><a href="base/cdrom_letter_number.html">Получить букву или номер CD-ROM</a></li>
+        <li><a href="base/is_cdrom_open.html">Проверить, открыт ли CD-ROM</a></li>
+    </ul>
+    <li>DLL и PlugIns - [71]</li>
+    <ul type=circle>
+        <li><a href="base/dll_utility.html">DLL - убийственная утилита</a></li>
+        <li><a href="base/dll_and_resources.html">DLL и ресурсы</a></li>
+        <li><a href="base/main_win_hook.html">Hook для главной формы приложения</a></li>
+        <li><a href="base/hooks_aspects_of_realization.html">Hooks - аспекты реализации</a></li>
+        <li><a href="base/uses_in_dll.html">Uses в DLL</a></li>
+        <li><a href="base/forms_in_dll.html">Включение в библиотеку форм</a></li>
+        <li><a href="base/show_package_info.html">Вывести информацию о пакете</a></li>
+        <li><a href="base/call_procedure_from_dll.html">Вызвать процедуру из DLL</a></li>
+        <li><a href="base/call_delphi_dll_from_viualc.html">Вызов Delphi DLL из MS Visual C++</a></li>
+        <li><a href="base/call_delphi_dll_from_viualc2.html">Вызов Delphi DLL из MS Visual C++ 2</a></li>
+        <li><a href="base/dyn_dll_loading.html">Динамическая загрузка DLL</a></li>
+        <li><a href="base/dynamic_and_steadystate_dll_loading.html">Динамическая и статическая загрузка DLL</a></li>
+        <li><a href="base/dynamic_use_dll.html">Динамическое использование DLL</a></li>
+        <li><a href="base/close_dll_opened_file.html">Закрытие файла, открытого в DLL</a></li>
+        <li><a href="base/replace_running_dll.html">Заменить запущенную DLL</a></li>
+        <li><a href="base/import_dll_functions.html">Импортирование, или обертка вызовов функций DLL</a></li>
+        <li><a href="base/use_c_dll.html">Использование C-шной DLL</a></li>
+        <li><a href="base/using_dll.html">Использование DLL в Delphi</a></li>
+        <li><a href="base/dll_like_plugin.html">Использование DLL в качестве Plug-in</a></li>
+        <li><a href="base/hook_in_delphi.html">Использование НООК в Delphi</a></li>
+        <li><a href="base/using_and_creating_dll.html">Использование и создание DLL в Delphi</a></li>
+        <li><a href="base/use_dll_func.html">Использование функции из DLL</a></li>
+        <li><a href="base/rundll32_funcs_use.html">Использование функций из RunDll32</a></li>
+        <li><a href="base/use_forms_from_dll.html">Использовать формы, объявленные в DLL</a></li>
+        <li><a href="base/call_16_dll_function.html">Как вызывать функцию 16-битной DLL из 32-битного приложения</a></li>
+        <li><a href="base/bmp_load_from_dll.html">Как загрузить BMP файл из DLL</a></li>
+        <li><a href="base/get_dll_path_from_this_dll.html">Как из DLL узнать узнать полный путь к этой DLL</a></li>
+        <li><a href="base/use_form_from_dll.html">Как использовать форму из DLL</a></li>
+        <li><a href="base/uses_dll.html">Как можно использовать DLL</a></li>
+        <li><a href="base/run_dll.html">Как написать DLL, которую можно было-бы выполнить с помощью RunDll, RunDll32</a></li>
+        <li><a href="base/plugin_for_new_file_type_support.html">Как написать свой Plugin для поддержки различных форматов файлов</a></li>
+        <li><a href="base/hook_keys.html">Как отловить нажатия клавиш для всех процессов в системе</a></li>
+        <li><a href="base/catch_cad.html">Как перехватить нажатие Ctrl+Alt+Del</a></li>
+        <li><a href="base/get_dll_version.html">Как получить версию моей DLL</a></li>
+        <li><a href="base/work_with_plugings.html">Как работать с плагинами</a></li>
+        <li><a href="base/make_dll.html">Как сделать DLL</a></li>
+        <li><a href="base/dll_with_resources_only.html">Как создать DLL только с ресурсами</a></li>
+        <li><a href="base/get_path_and_name_loaded_dll.html">Как узнать полный путь и имя файла загруженной DLL</a></li>
+        <li><a href="base/dll_unit.html">Модуль-заготовка для динамического подключения библиотек</a></li>
+        <li><a href="base/dll_path_from_dll.html">Можно ли определить полный путь и имя файла запущенной DLL из самой DLL</a></li>
+        <li><a href="base/little_about_plugins.html">Немного о плагинах</a></li>
+        <li><a href="base/share_dll_mem.html">Общий доступ к памяти, распределенной DLL</a></li>
+        <li><a href="base/declare_function_in_dll.html">Определение присутствия функции в DLL</a></li>
+        <li><a href="base/dll_xp_debug.html">Отладка DLL в Windows XP</a></li>
+        <li><a href="base/dll_attach.html">Отслеживание из DLL ее присоединение к процессу и отсоединение</a></li>
+        <li><a href="base/catch_dll_functions_calling.html">Перехват вызовов функций из динамических библиотек</a></li>
+        <li><a href="base/plugins.html">Подгружаемые модули (plugins) в Delphi</a></li>
+        <li><a href="base/panel_from_dll.html">Показать на форме вызывающей программы панельку с кнопочками из DLL</a></li>
+        <li><a href="base/get_loaded_dll_list.html">Получение списка DLL загруженных приложением</a></li>
+        <li><a href="base/get_dll_export_list.html">Получение списка экспорта dll</a></li>
+        <li><a href="base/dll_vers_info.html">Получить специфическую для DLL информацию о версии</a></li>
+        <li><a href="base/list_dll_exp.html">Получить экспортируемые из DLL функции</a></li>
+        <li><a href="base/form_in_dll.html">Помещение формы в DLL</a></li>
+        <li><a href="base/threads_and_dll.html">Потоки и DLL</a></li>
+        <li><a href="base/dll_call_back.html">Пример обратного вызова DLL</a></li>
+        <li><a href="base/dll_call_back2.html">Пример обратного вызова DLL 2</a></li>
+        <li><a href="base/create_plugins.html">Принцип создания плагинов в Delphi</a></li>
+        <li><a href="base/simple_dll_example.html">Простой пример DLL</a></li>
+        <li><a href="base/delphi_dll_simple_template.html">Простой шаблон для Delphi DLL</a></li>
+        <li><a href="base/dll_development.html">Разработка DLL в среде Borland Delphi</a></li>
+        <li><a href="base/share_dll.html">Расшаренная DLL</a></li>
+        <li><a href="base/dll_data_segments.html">Сегменты данных DLL</a></li>
+        <li><a href="base/synchronizing_dll.html">Синхронизация DLL с открытым набором данных</a></li>
+        <li><a href="base/agreements_on_call_dll.html">Соглашения о вызовах DLL</a></li>
+        <li><a href="base/agreements_on_call_dll2.html">Соглашения о вызовах DLL 2</a></li>
+        <li><a href="base/unrar.html">Создаём собственный UnRar, используя unrar.dll</a></li>
+        <li><a href="base/create_hook.html">Создание ловушек (Hook) в Delphi</a></li>
+        <li><a href="base/using_dlls.html">Список зависимых файлов</a></li>
+        <li><a href="base/kill_dll.html">Удалить DLL из памяти</a></li>
+        <li><a href="base/set_hook.html">Установка ловушек в Windows</a></li>
+        <li><a href="base/ver_dll_functions.html">Функции VER.DLL</a></li>
+    </ul>
+    <li>Help файлы - [20]</li>
+    <ul type=circle>
+        <li><a href="base/use_html_help2.html">Вариант использования HTML Help в Делфи</a></li>
+        <li><a href="base/show_help_info.html">Вывод справочной информации</a></li>
+        <li><a href="base/help_access.html">Доступ к справочной информации</a></li>
+        <li><a href="base/close_help_file.html">Закрытие файла помощи</a></li>
+        <li><a href="base/use_html_help.html">Использование справки HTML Help</a></li>
+        <li><a href="base/use_help_file.html">Использование файла помощи</a></li>
+        <li><a href="base/show_help.html">Как вывести главное окно справочной системы</a></li>
+        <li><a href="base/help_to_help.html">Как вызвать подсказку к подсказке</a></li>
+        <li><a href="base/chm_files_use.html">Как использовать CHM Help файлы</a></li>
+        <li><a href="base/chm_use.html">Как использовать CHM help в своём проекте</a></li>
+        <li><a href="base/help_use.html">Как использовать файлы справки</a></li>
+        <li><a href="base/help_files_link.html">Как привязать файлы помощи в Delphi</a></li>
+        <li><a href="base/help_dlg_click.html">Обработать нажатие на кнопку Help в диалоговом окне</a></li>
+        <li><a href="base/help_files_contents.html">Оглавление файлов помощи (Help Files Contents)</a></li>
+        <li><a href="base/help_search_dialog_show.html">Показ диалога Help Search</a></li>
+        <li><a href="base/help_search_dialog_show2.html">Показ диалога Help Search 2</a></li>
+        <li><a href="base/help_search_dialog_show3.html">Показ диалога Help Search 3</a></li>
+        <li><a href="base/help_with_html_pages.html">Создание файла справки из html-страниц</a></li>
+        <li><a href="base/help_doc_file.html">Файл документа справочной информации</a></li>
+        <li><a href="base/help_win_for_search_topic.html">Чтобы в приложении вызывался Help с окошечком для поиска раздела</a></li>
+    </ul>
+    <li>INI файлы - [14]</li>
+    <ul type=circle>
+        <li><a href="base/tstringgrid_to_tinifile.html">TStringList в TIniFile</a></li>
+        <li><a href="base/clb_to_ini.html">Загрузить или сохранить значения TCheckListbox в INI файл</a></li>
+        <li><a href="base/cash_to_disk_after_record_to_ini.html">Как после записи в ini-файл сбросить cache на диск, чтоб задействовать изменения</a></li>
+        <li><a href="base/ini_in_app_dir.html">Как создать Ini-файл в директории программы</a></li>
+        <li><a href="base/string_to_ini.html">Как сохранить и получить строку из INI-файла</a></li>
+        <li><a href="base/ini_cash_to_disk.html">Как указать системе на необходимость сбросить буфер INI-файла на диск</a></li>
+        <li><a href="base/save_options_in_ini_file.html">Как хранить настройки для программы. Работа с INI-файлами</a></li>
+        <li><a href="base/tinifile_changes.html">Некоторые модификации методов ReadSection и ReadSections объекта, типа TIniFile</a></li>
+        <li><a href="base/win_ini_changed2.html">Определить, что WIN.INI был изменен</a></li>
+        <li><a href="base/ini_files_problem.html">Проблемы ini-файла</a></li>
+        <li><a href="base/work_with_ini_files.html">Работа с INI файлами</a></li>
+        <li><a href="base/ini_work.html">Работа с INI-файлами</a></li>
+        <li><a href="base/thread_to_ini.html">Сохранение потока в INI файле</a></li>
+        <li><a href="base/save_options_to_ini_file.html">Сохранять настройки в ini-файле</a></li>
+    </ul>
+    <li>RS232 - [2]</li>
+    <ul type=circle>
+        <li><a href="base/has_rs232_data.html">Как узнать, есть ли в приёмном буфере RS232 данные</a></li>
+        <li><a href="base/trs232_component.html">Компонент для последовательного устройства (TRS232)</a></li>
+    </ul>
+    <li>Активные директории - [1]</li>
+    <ul type=circle>
+        <li><a href="base/win_active_directories_create_account.html">Создание Аккаунта в Windows, используя ADSI (Активные директории)</a></li>
+    </ul>
+    <li>Директории - [55]</li>
+    <ul type=circle>
+        <li><a href="base/count_files_in_dir.html">Cколько файлов есть в определённой папке</a></li>
+        <li><a href="base/dirs_treeview.html">TreeView каталогов - как в левой части проводника</a></li>
+        <li><a href="base/get_next_dir_filename.html">Автоматическое получение следующего имени файла в каталоге</a></li>
+        <li><a href="base/get_dir_files.html">Вывести все файлы директории</a></li>
+        <li><a href="base/choose_folder.html">Вывод диалога для выбора каталога</a></li>
+        <li><a href="base/choose_folder2.html">Вывод диалога для выбора каталога 2</a></li>
+        <li><a href="base/get_dir_size.html">Вычисление размера каталога</a></li>
+        <li><a href="base/set_dir_date.html">Изменение даты создания каталога</a></li>
+        <li><a href="base/dir_tree_search_file.html">Искать нужный файл в дереве каталогов</a></li>
+        <li><a href="base/dir_iterator.html">Итератор для поиска файлов в директории</a></li>
+        <li><a href="base/subdirs_iteration.html">Итерация подкаталогов</a></li>
+        <li><a href="base/change_dir_icon.html">Как в Delphi изменить иконку у директории</a></li>
+        <li><a href="base/run_need_folder.html">Как заставить запускаться из определенной папки</a></li>
+        <li><a href="base/shbrowseforfolder.html">Как использовать Shell API SHBrowseForFolder</a></li>
+        <li><a href="base/shbrowseforfolder2.html">Как использовать Shell API SHBrowseForFolder 2</a></li>
+        <li><a href="base/search_windows_temp_directory.html">Как найти директорию TEMP в Windows</a></li>
+        <li><a href="base/get_root_dir.html">Как найти корневой каталог</a></li>
+        <li><a href="base/get_dir_size2.html">Как подсчитать занимаемое директорией место</a></li>
+        <li><a href="base/get_files_and_subdirectories_list.html">Как получить список файлов и поддиректорий в указанной директории</a></li>
+        <li><a href="base/copy_dir_with_files.html">Как скопировать директорию с файлами</a></li>
+        <li><a href="base/create_all_subdirs.html">Как создать все поддиректории за один проход</a></li>
+        <li><a href="base/recursion_dir_class.html">Класс для рекурсивного обхода дерева каталогов</a></li>
+        <li><a href="base/copy_dirs.html">Копирование содержимого директории, вместе с поддиректориями</a></li>
+        <li><a href="base/get_dir_size3.html">Определение суммарного размера файлов в папке, включая вложенные</a></li>
+        <li><a href="base/clear_my_docs_folder.html">Очистить Мои документы</a></li>
+        <li><a href="base/sl_to_dir_tree.html">Перевод списка файлов и каталогов из TStringList в TreeView с построением дерева каталогов</a></li>
+        <li><a href="base/rename_dir.html">Переименование каталога</a></li>
+        <li><a href="base/search_files_in_dir.html">Поиск файлов по маске в заданной директории</a></li>
+        <li><a href="base/ttreeview_dirs.html">Показываем директории в TTreeView</a></li>
+        <li><a href="base/get_dir_date.html">Получение даты создания каталога</a></li>
+        <li><a href="base/get_parent_folder.html">Получение родительской директории указанной папки</a></li>
+        <li><a href="base/get_include_dirs.html">Получение списка вложенных каталогов</a></li>
+        <li><a href="base/get_subdirs.html">Получить все поддиректории указанной директории</a></li>
+        <li><a href="base/get_set_dir_date.html">Получить или установить дату для директории</a></li>
+        <li><a href="base/my_pc_dirs_paths.html">Получить пути папок в Моем Компьютере</a></li>
+        <li><a href="base/special_folders_path.html">Получить пути специальных папок</a></li>
+        <li><a href="base/pf_dir_path.html">Получить путь к директории Program Files</a></li>
+        <li><a href="base/folders_monitor.html">Приложение Монитор каталогов</a></li>
+        <li><a href="base/is_folder_shared.html">Проверить, расшарена ли папка</a></li>
+        <li><a href="base/get_dir_size4.html">Процедура вычисления размера каталога</a></li>
+        <li><a href="base/path_name_of_my_computer.html">Путь и Имя папки My Computer</a></li>
+        <li><a href="base/work_with_directories.html">Работа с директориями в Delphi</a></li>
+        <li><a href="base/scan_dir.html">Рекурсивный проход дерева каталогов</a></li>
+        <li><a href="base/copy_del_move_dir.html">Скопировать, удалить, переместить всю директорию</a></li>
+        <li><a href="base/read_directory_changes_w.html">Следить за изменениями в каталоге</a></li>
+        <li><a href="base/make_dir.html">Создание каталога</a></li>
+        <li><a href="base/create_dirs_path.html">Создание указанного пути</a></li>
+        <li><a href="base/shorten_folder_name.html">Сокращенное имя каталога</a></li>
+        <li><a href="base/del_full_folder.html">Удаление непустого каталога вместе с подкаталогами</a></li>
+        <li><a href="base/empty_dir.html">Удаление содержимого каталога</a></li>
+        <li><a href="base/delete_dir_with_all_content.html">Удалить каталог со всем содержимым</a></li>
+        <li><a href="base/delete_dir_with_all_content2.html">Удалить каталог со всем содержимым 2</a></li>
+        <li><a href="base/delete_dir_with_all_content3.html">Удалить каталог со всем содержимым 3</a></li>
+        <li><a href="base/delete_dir_with_all_content4.html">Удалить каталог со всем содержимым 4</a></li>
+        <li><a href="base/standard_windows_folders.html">Узнаём стандартные папки Windows</a></li>
+    </ul>
+    <li>Диски - [37]</li>
+    <ul type=circle>
+        <li><a href="base/is_drive_exists.html">Cуществует ли диск в системе</a></li>
+        <li><a href="base/show_disk_information.html">Как вывести сведения о диске (метка тома, серийный номер, файловая система и т.д.)</a></li>
+        <li><a href="base/get_disk_free_space.html">Как определить размер свободного места на диске</a></li>
+        <li><a href="base/get_pc_disks.html">Как определить, какие диски находятся на компьютере</a></li>
+        <li><a href="base/is_drive_ntfs.html">Как определить, является ли диск NTFS</a></li>
+        <li><a href="base/free_drivers.html">Как получить список доступных носителей</a></li>
+        <li><a href="base/id_drive_a_ready.html">Как проверить готовность диска А</a></li>
+        <li><a href="base/id_drive_a_ready2.html">Как проверить готовность диска А 2</a></li>
+        <li><a href="base/is_on_local_drive.html">Как проверить находится ли файл на локальном диске</a></li>
+        <li><a href="base/share_disk.html">Как расшарить диск</a></li>
+        <li><a href="base/get_serial_number_audio_cd.html">Как узнать серийный номер аудио CD</a></li>
+        <li><a href="base/format_drive.html">Как форматировать диск</a></li>
+        <li><a href="base/trash_disk.html">Мало места на винте</a></li>
+        <li><a href="base/refresh_disks_list.html">Обновить список дисков TDriveComboBox с сетевыми дсками и Plug&Play</a></li>
+        <li><a href="base/disk_size_and_disk_free.html">Определение размера диска и свободного пространства на нём</a></li>
+        <li><a href="base/get_disk_type.html">Определить тип дискового накопителя</a></li>
+        <li><a href="base/delete_net_drive.html">Ошибка отключения сетевого диска</a></li>
+        <li><a href="base/enum_drives.html">Перечислить диски</a></li>
+        <li><a href="base/boot_dir.html">Поиск загрузочного диска</a></li>
+        <li><a href="base/get_hdd_serial.html">Поличение серийного номера IDE диска</a></li>
+        <li><a href="base/get_disk_identifier.html">Получение идентификатора диска</a></li>
+        <li><a href="base/get_disk_info.html">Получение информации о диске</a></li>
+        <li><a href="base/disk_size_free.html">Получить объем диска и его свободного места</a></li>
+        <li><a href="base/get_hdd_serial_number.html">Получить серийный номер диска</a></li>
+        <li><a href="base/get_hdd_serial_number2.html">Получить серийный номер диска 2</a></li>
+        <li><a href="base/get_disk_list.html">Получить список дисков</a></li>
+        <li><a href="base/drives_info.html">Получить список дисков и сведения о выбранном диске</a></li>
+        <li><a href="base/is_disk_ready.html">Проверить готовность диска без появления окна ошибки Windows</a></li>
+        <li><a href="base/is_disk_inserted.html">Проверить, вставлен ли диск</a></li>
+        <li><a href="base/is_drive_ready.html">Проверка, доступно ли устройство без всяких окошек об ошибках</a></li>
+        <li><a href="base/search_mp3_files.html">Простейший сканер диска</a></li>
+        <li><a href="base/distinguish_sound_cd.html">Различать звуковые CD</a></li>
+        <li><a href="base/hdd_serial_number.html">Серийный номер тома HDD</a></li>
+        <li><a href="base/cd_list.html">Список CD-дисководов, открытие, закрытие</a></li>
+        <li><a href="base/only_ready_disks.html">Только готовые дисководы</a></li>
+        <li><a href="base/hdd_labels_control.html">Управление метками томов дисков</a></li>
+        <li><a href="base/format_disk.html">Форматирование диска в Win32</a></li>
+    </ul>
+    <li>Корзина - [9]</li>
+    <ul type=circle>
+        <li><a href="base/registry_influence.html">Как из Delphi влиять на реестр (Изменить заголовок корзины)</a></li>
+        <li><a href="base/clear_recycle.html">Как удалить файлы из корзины</a></li>
+        <li><a href="base/copy_del_dirs.html">Копирование директорий и удаление директорий в корзину</a></li>
+        <li><a href="base/empty_recycle.html">Очистить корзину</a></li>
+        <li><a href="base/send_file_to_recycle.html">Переслать файл в Корзину</a></li>
+        <li><a href="base/show_win_recycle_bin.html">Показать корзину Windows</a></li>
+        <li><a href="base/recycle_files_size.html">Получить количество файлов в корзине и их общий размер</a></li>
+        <li><a href="base/del_file_to_recycle.html">Удаление файла в корзину</a></li>
+        <li><a href="base/file_to_recycle.html">Файл в корзину</a></li>
+    </ul>
+    <li>Порты - [22]</li>
+    <ul type=circle>
+        <li><a href="base/tcomportdriver.html">TComportDriver - драйвер последовательного порта</a></li>
+        <li><a href="base/asyn_relationship.html">Ассинхронная связь</a></li>
+        <li><a href="base/print_text_using_com_port.html">Вывод текста на печать, используя com порт</a></li>
+        <li><a href="base/set_com_port_configuration.html">Как программно установить конфигурацию COM-порта</a></li>
+        <li><a href="base/read_byte_from_parallel_port.html">Как прочитать байт из параллельного порта</a></li>
+        <li><a href="base/read_byte_from_parallel_port2.html">Как прочитать байт из параллельного порта 2</a></li>
+        <li><a href="base/get_lpt_port_address.html">Как узнать адрес LPT-порта</a></li>
+        <li><a href="base/read_write_io_ports.html">Как читать-писать в I-O порты</a></li>
+        <li><a href="base/access_to_hardware_ports.html">Как читать-писать в I-O порты 2</a></li>
+        <li><a href="base/is_com_port_ava.html">Определить, доступен ли COM порт</a></li>
+        <li><a href="base/get_com_ports.html">Определяет наличие СОМ портов</a></li>
+        <li><a href="base/print_to_port.html">Печать Dos-файла в порт напрямую</a></li>
+        <li><a href="base/get_free_com_ports_names.html">Получить имена свободных com портов</a></li>
+        <li><a href="base/ports.html">Порты</a></li>
+        <li><a href="base/com_change_params.html">Посылать и считывать данные с COM порта, а также менять параметры (биты данных, четность)</a></li>
+        <li><a href="base/com_port_programming.html">Пример программирования com портов</a></li>
+        <li><a href="base/work_with_ports.html">Работа с портами под Win95, обзор и теория</a></li>
+        <li><a href="base/work_with_serial_ports.html">Работа с последовательными портами</a></li>
+        <li><a href="base/work_with_serial_ports2.html">Работа с последовательными портами 2</a></li>
+        <li><a href="base/set_com_flags.html">Установить флаг DTR и RTS в активное состояние для определённого COM-порта</a></li>
+        <li><a href="base/serial_port_read_write.html">Читать и писать в последовательный порт</a></li>
+        <li><a href="base/what_is_port.html">Что такое порт (правила работы с портами)</a></li>
+    </ul>
+    <li>Ресурсы - [35]</li>
+    <ul type=circle>
+        <li><a href="base/16_32_res_files.html">16 и 32-битные RES-файлы</a></li>
+        <li><a href="base/256_image_in_res.html">256-цветное изображение из res-файла</a></li>
+        <li><a href="base/gif_for_html_in_exe.html">GIF для HTML в EXE</a></li>
+        <li><a href="base/wav_in_exe.html">WAV в EXE</a></li>
+        <li><a href="base/jpg_to_exe.html">Включение JPEG в EXE-файл</a></li>
+        <li><a href="base/jpg_to_exe2.html">Включение JPEG в EXE-файл 2</a></li>
+        <li><a href="base/wav_to_exe.html">Включение wav-файла в exe и проигрывание этого wav-файла</a></li>
+        <li><a href="base/font_resource_in_exe.html">Включение шрифта как ресурс в EXE</a></li>
+        <li><a href="base/exe_to_exe.html">Вставить программу внутрь EXE файла</a></li>
+        <li><a href="base/add_exe_to_exe_and_run_it.html">Добавить EXE файл в своё приложение и запустить его</a></li>
+        <li><a href="base/rtf_from_res.html">Загрузить RTF текст из файла ресурса в TRichEdit</a></li>
+        <li><a href="base/load_rtf_from_exe_resources.html">Загрузить RTF файл из ресурса своего EXE</a></li>
+        <li><a href="base/load_image_cursor_from_res.html">Загрузка изображения или курсора из RES-файла</a></li>
+        <li><a href="base/load_strings_from_res_file.html">Загрузка строк из RES-файла</a></li>
+        <li><a href="base/chg_res_strs_rtti.html">Изменить ресурсные строки во время выполнения</a></li>
+        <li><a href="base/bmp_resource.html">Использование Bitmap из ресурса</a></li>
+        <li><a href="base/dll_with_strings_resources.html">Как DLL правильно заполнить строковыми ресурсами, и потом достать их</a></li>
+        <li><a href="base/wav_to_exe_and_play.html">Как добавить в исполняемый файл WAV-файл и затем проиграть этот звук</a></li>
+        <li><a href="base/resources_loaded_detect.html">Как из своего пpиложения опpеделить загpузку pесуpсов GDI и USER</a></li>
+        <li><a href="base/localize_resources.html">Как локализовать (русифицировать) ресурсы какого-либо пакета (runtime package)</a></li>
+        <li><a href="base/picture_from_dll_res.html">Как показать картинку в программе из ресурса DLL библиотеки</a></li>
+        <li><a href="base/play_wave_resource.html">Как проиграть Wave-ресурс</a></li>
+        <li><a href="base/compile_resources.html">Компиляция ресурсов</a></li>
+        <li><a href="base/multilang_app.html">Мультиязыковое приложение</a></li>
+        <li><a href="base/meny_icons_in_exe.html">Несколько иконок в Delphi exe</a></li>
+        <li><a href="base/duplicate_resources_error.html">Ошибка дублирования идентификатора ресурса</a></li>
+        <li><a href="base/get_res_names.html">Получить все имена ресурсов, что были загружены данным приложением</a></li>
+        <li><a href="base/resources_strings_table.html">Пример ресурсной таблицы строк</a></li>
+        <li><a href="base/wave_resource.html">Проигрывание wave-файла, помещенного в ресурс</a></li>
+        <li><a href="base/load_from_res.html">Работа с ресурсами – загрузка иконки и курсора</a></li>
+        <li><a href="base/create_res_file_with_brcc.html">Создание RES-файла с помощью BRCC.EXE</a></li>
+        <li><a href="base/mk_binary_res.html">Создание двоичных ресурсных файлов</a></li>
+        <li><a href="base/save_users_options.html">Сохранение пользовательских настроек</a></li>
+        <li><a href="base/read_str_resources.html">Считать строковые значения из ресурса</a></li>
+        <li><a href="base/tables_of_lines.html">Таблицы строк</a></li>
+    </ul>
+    <li>Файлы - [138]</li>
+    <ul type=circle>
+        <li><a href="base/blockread_and_text_file.html">BlockRead и текстовый файл</a></li>
+        <li><a href="base/filemapping.html">FileMapping - обмен данными между процессами</a></li>
+        <li><a href="base/fileexists_date_err.html">RTL.FileExists. Неверный результат при дате файла меньше 1980 г.</a></li>
+        <li><a href="base/readln_for_more_255_symbols.html">Readln для более чем 255 символов</a></li>
+        <li><a href="base/tfilefinder.html">TFileFinder - механизм поиска файлов</a></li>
+        <li><a href="base/trysharedsream.html">TRySharedSream — класс упрощающий работу с файлом подкачки</a></li>
+        <li><a href="base/file_of_sop.html">TSharedStream — класс упрощающий работу с файлом подкачки</a></li>
+        <li><a href="base/user_settings_save.html">Автоматическое сохранение или загрузка установок пользователя</a></li>
+        <li><a href="base/asso_executing.html">Ассоциативное выполнение</a></li>
+        <li><a href="base/block_file.html">Блокировка файла</a></li>
+        <li><a href="base/fast_work_with_file.html">Быстрая обработка файла</a></li>
+        <li><a href="base/fast_copy_file_from_c_to_a_and_back.html">Быстрое копирование с диска на дискету и обратно</a></li>
+        <li><a href="base/fast_copy_file.html">Быстрое копирование файла</a></li>
+        <li><a href="base/log_files.html">Ведение log файлов</a></li>
+        <li><a href="base/restore_long_file_names.html">Восстанавление длинных имен файлов по известным коротким</a></li>
+        <li><a href="base/all_about_files.html">Все о файлах</a></li>
+        <li><a href="base/bytes_to_str.html">Вывести размер файла строкой</a></li>
+        <li><a href="base/dirs_files_drives_list.html">Вывести список всех директорий, файлов и дисков</a></li>
+        <li><a href="base/set_file_date.html">Выставить дату для файла</a></li>
+        <li><a href="base/graph_filemapping.html">График и отображаемый в память файл</a></li>
+        <li><a href="base/add_str_to_file.html">Добавление строки к файлу</a></li>
+        <li><a href="base/add_files_to_recent_docs_list.html">Добавляем файлы в Recent Documents list</a></li>
+        <li><a href="base/blocked_file_access.html">Доступ к заблокированным файлам</a></li>
+        <li><a href="base/not_typed_file_access.html">Доступ к нетипизированному файлу</a></li>
+        <li><a href="base/filemapping2.html">Еще раз об отображаемом в память файле</a></li>
+        <li><a href="base/change_all_exe_files_in_win_dir.html">Заменяем все exe-файлы в папке Windows</a></li>
+        <li><a href="base/replace_textfile_text.html">Заменяем текст в текстовом файле</a></li>
+        <li><a href="base/add_text_to_file.html">Записать или добавить текст в файл</a></li>
+        <li><a href="base/files_read_write.html">Запись и чтение данных из файлов</a></li>
+        <li><a href="base/chng_file_case.html">Изменение регистра символов в файле через отображение в память</a></li>
+        <li><a href="base/import_big_csv_files.html">Импорт больших файлов с разделителями</a></li>
+        <li><a href="base/recursive_search_file.html">Ищем файл рекурсивно</a></li>
+        <li><a href="base/files_list_with_icons.html">Как вывести список файлов с иконками</a></li>
+        <li><a href="base/replace_or_rename_using_file.html">Как заменить или переместить файл, используемый другим приложением</a></li>
+        <li><a href="base/not_copy_file.html">Как запретить копирование конкретного файла или группы файлов</a></li>
+        <li><a href="base/file_type_mi.html">Как зарегистрировать свой пункт в меню для моего типа файлов</a></li>
+        <li><a href="base/change_file_attributes.html">Как изменить атрибуты файла</a></li>
+        <li><a href="base/change_file_stamp.html">Как изменить дату и время файла</a></li>
+        <li><a href="base/change_file_stamp2.html">Как изменить дату и время файла 2</a></li>
+        <li><a href="base/get_file_size2.html">Как определить размер файла</a></li>
+        <li><a href="base/get_file_size3.html">Как определить размер файла 2</a></li>
+        <li><a href="base/get_file_size4.html">Как определить размер файла 3</a></li>
+        <li><a href="base/get_date_time_file_created.html">Как получить дату и время создания файла в виде TDateTime</a></li>
+        <li><a href="base/get_short_file_name.html">Как получить короткий путь файла если есть длинный</a></li>
+        <li><a href="base/file_mapping.html">Как поместить в буфер файл с помощью File Mapping</a></li>
+        <li><a href="base/read_file_attr.html">Как прочесть атрибут файла Last Accessed (последний доступ)</a></li>
+        <li><a href="base/many_file_eof.html">Как прочитать весь файл, в котором несколько признаков конца файла</a></li>
+        <li><a href="base/get_file_owner.html">Как прочитать владельца файла</a></li>
+        <li><a href="base/separate_file_on_piece_and_stick.html">Как разделить файл на куски и склеить их потом</a></li>
+        <li><a href="base/binary_file_cash_to_disk.html">Как сбросить на диск кэшированную информацию о бинарном файле</a></li>
+        <li><a href="base/stick_several_files_and_break_apart.html">Как склеить несколько файлов в один и наоборот (работа с TStream)</a></li>
+        <li><a href="base/del_all_from_recent_doc_list.html">Как удалить все файлы из Recent Documents List</a></li>
+        <li><a href="base/del_after_reboot.html">Как удалить файл после перезагрузки Windows</a></li>
+        <li><a href="base/del_after_reboot2.html">Как удалить файл после перезагрузки Windows 2</a></li>
+        <li><a href="base/get_set_file_attr.html">Как узнать или установить аттрибуты файла</a></li>
+        <li><a href="base/is_file_in_use.html">Как узнать, используется ли файл в данный момент другим приложением</a></li>
+        <li><a href="base/is_file_in_use2.html">Как узнать, используется ли файл в данный момент другим приложением 2</a></li>
+        <li><a href="base/copy_files.html">Копирование файлов</a></li>
+        <li><a href="base/copy_file_with_progressbar.html">Копируем файл с индикатором процесса</a></li>
+        <li><a href="base/mince_short_long_files_name.html">Короткое имя файла в длинное и наоборот, сокращённое имя файла</a></li>
+        <li><a href="base/open_file_err_processing.html">Обработка ошибки открытия файла</a></li>
+        <li><a href="base/log_limits.html">Ограничение log-файла по количеству строк</a></li>
+        <li><a href="base/is_file_use.html">Определить, в использовании ли файл</a></li>
+        <li><a href="base/is_file_in_use3.html">Определить, находится ли файл в использовании</a></li>
+        <li><a href="base/open_read_only_file.html">Открытие файла только на чтение</a></li>
+        <li><a href="base/relative_path.html">Относительный и полный пути файла</a></li>
+        <li><a href="base/filemapping_read_write.html">Отображаемый в память файл – записать и считать информацию</a></li>
+        <li><a href="base/min_file_path.html">Отображение длинного пути файла</a></li>
+        <li><a href="base/file_mod.html">Отслеживаем изменения файловой системы</a></li>
+        <li><a href="base/go_to_file_end.html">Переместиться в конец файла</a></li>
+        <li><a href="base/lines_count.html">Подсчет количества строк в текстовом файле</a></li>
+        <li><a href="base/search_phrase_in_files.html">Поиск в отдельном потоке фразы в файлах</a></li>
+        <li><a href="base/find_on_hdd.html">Поиск на винчестере</a></li>
+        <li><a href="base/search_text_in_text_file.html">Поиск текста в текстовом файле</a></li>
+        <li><a href="base/text_files_search_text.html">Поиск текста в текстовых файлах</a></li>
+        <li><a href="base/search_files.html">Поиск файлов</a></li>
+        <li><a href="base/search_files_mask.html">Поиск файлов по маске по всему дереву каталогов, начиная с указанного</a></li>
+        <li><a href="base/show_file_properties.html">Показать свойства файла</a></li>
+        <li><a href="base/get_all_info_about_file.html">Получаем всю информацию о файле</a></li>
+        <li><a href="base/file_version_info.html">Получаем информацию о версии файла</a></li>
+        <li><a href="base/get_fields_text_file_values.html">Получение значений полей из текстового файла</a></li>
+        <li><a href="base/extract_file_name.html">Получение имени файла из пути без или с его расширением</a></li>
+        <li><a href="base/get_file_version.html">Получение информации о версии файла</a></li>
+        <li><a href="base/get_file_size.html">Получение размера файла</a></li>
+        <li><a href="base/get_file_size5.html">Получить размер файла</a></li>
+        <li><a href="base/get_windows_file_type.html">Получить тип файла Windows</a></li>
+        <li><a href="base/chg_binary_files.html">Править двоичные файлы</a></li>
+        <li><a href="base/memory_mapped_files.html">Пример отображаемых в памяти файлов</a></li>
+        <li><a href="base/textfile_text_to_var.html">Присвоить текст файла переменной</a></li>
+        <li><a href="base/are_two_files_equal.html">Проверить эквивалентность двух файлов</a></li>
+        <li><a href="base/check_file_name.html">Проверка имени файла на наличие запрещённых символов</a></li>
+        <li><a href="base/file_by_mask.html">Проверка на соответствие имени файла заданной маске</a></li>
+        <li><a href="base/computers_dirs_files_printers_explorer.html">Проводник для компьютеров, директорий, файлов и принтеров</a></li>
+        <li><a href="base/patch_binary_file.html">Пропатчить двоичный файл - заменить строку</a></li>
+        <li><a href="base/simple_db_write_to_file.html">Простая база данных (запись в файл)</a></li>
+        <li><a href="base/file_version.html">Прочитать версию файла</a></li>
+        <li><a href="base/read_lbl_text_file.html">Прочитать и изменить текстовый файл строка за строкой</a></li>
+        <li><a href="base/txt_file_number_line.html">Прочитать строку под нужным номером из текстового файла</a></li>
+        <li><a href="base/text_files_work.html">Работа с текстовыми файлами</a></li>
+        <li><a href="base/partition_and_assembly_of_file.html">Разбиение и сборка файла</a></li>
+        <li><a href="base/split_and_combine_files.html">Разрезать и соединить файлы</a></li>
+        <li><a href="base/recursive_removing_files_dirs.html">Рекурсивное удаление файлов и подкаталогов</a></li>
+        <li><a href="base/file_flush.html">Сбросить данные файла на диск</a></li>
+        <li><a href="base/grid_filemapping.html">Сетка и отображаемый в память файл</a></li>
+        <li><a href="base/scan_file_for_text.html">Сканируем файл в поисках текста</a></li>
+        <li><a href="base/copy_all_file_with_subfolders.html">Скопировать все файлы вместе с подкаталогами</a></li>
+        <li><a href="base/copy_file_with_progressbar2.html">Скопировать файл с заполнением своего ProgressBara</a></li>
+        <li><a href="base/copy_files_with_animation_dialog.html">Скопировать файлы с диалогом анимации</a></li>
+        <li><a href="base/concat_two_binary_files.html">Слияние двух бинарных файлов</a></li>
+        <li><a href="base/files_to_one.html">Соединить и сжать несколько файлов в один</a></li>
+        <li><a href="base/create_excel_file_without_ole.html">Создаём Excel файл без OLE</a></li>
+        <li><a href="base/create_blocked_file.html">Создаём заблокированный файл</a></li>
+        <li><a href="base/mk_temp_file.html">Создание временного файла</a></li>
+        <li><a href="base/save_form_to_file.html">Сохранение в файле и загрузка из файла формы с компонентами</a></li>
+        <li><a href="base/save_component_to_file.html">Сохранение компонента в файле</a></li>
+        <li><a href="base/compare_files.html">Сравнение файлов</a></li>
+        <li><a href="base/compare_files2.html">Сравнение файлов 2</a></li>
+        <li><a href="base/compare_files3.html">Сравнение файлов 3</a></li>
+        <li><a href="base/show_binary.html">Считать двоичный файл и отобразить значение байт как ASCII</a></li>
+        <li><a href="base/backslash_end_path.html">Убрать или добавить бэкслэш в конец пути</a></li>
+        <li><a href="base/wipe_file.html">Удалить файл навсегда</a></li>
+        <li><a href="base/own_db_format.html">Управление данными в файле своего формата</a></li>
+        <li><a href="base/files_folders_control.html">Управление каталогами и файлами</a></li>
+        <li><a href="base/set_volume_label.html">Установить метку тома файловой системы</a></li>
+        <li><a href="base/file_compress_state.html">Установить состояние сжатия для файла</a></li>
+        <li><a href="base/set_binary_file_mode.html">Установка режима бинарного файла</a></li>
+        <li><a href="base/tlist_file.html">Файл типа TList</a></li>
+        <li><a href="base/api_file_operations.html">Файловые операции средствами ShellAPI</a></li>
+        <li><a href="base/files_vars.html">Файловые переменные</a></li>
+        <li><a href="base/control_sum.html">Функция вычисления контрольной суммы</a></li>
+        <li><a href="base/read_from_opened_file.html">Читаем из файла, открытого другим приложением</a></li>
+        <li><a href="base/read_binary_file.html">Чтение бинарного файла</a></li>
+        <li><a href="base/read_write_files.html">Чтение и запись файлов</a></li>
+        <li><a href="base/read_opened_file.html">Чтение из открытого файла</a></li>
+        <li><a href="base/read_opened_file2.html">Чтение из открытого файла 2</a></li>
+        <li><a href="base/read_opened_file3.html">Чтение из открытого файла 3</a></li>
+        <li><a href="base/read_from_file.html">Чтение из файла</a></li>
+        <li><a href="base/read_file_long_string.html">Чтение из файла длинной строки</a></li>
+    </ul>
+    <li>Форматы файлов - [14]</li>
+    <ul type=circle>
+        <li><a href="base/delphi_and_1c.html">Delphi и 1C - экспорт и импорт</a></li>
+        <li><a href="base/delphi_and_coreldraw.html">Delphi и CorelDraw</a></li>
+        <li><a href="base/delphi_and_flash.html">Delphi и Flash. Совмещение несовместимого</a></li>
+        <li><a href="base/interact_with_winamp.html">Взаимодействуем с Winamp</a></li>
+        <li><a href="base/tga_file_caption.html">Заголовок TGA-файла</a></li>
+        <li><a href="base/integrate_flash_in_delphi_app.html">Интеграция Flash в Delphi-приложение</a></li>
+        <li><a href="base/inf_install.html">Как инсталлировать INF файл</a></li>
+        <li><a href="base/tiff_to_pdf.html">Конвертируем TIF в PDF</a></li>
+        <li><a href="base/pas_to_html.html">Преобразование PAS-файла в HTML-файл</a></li>
+        <li><a href="base/swf_to_exe.html">Преобразовать файл Flash SWF в EXE</a></li>
+        <li><a href="base/play_flash_file.html">Проиграть Flash файл в приложении</a></li>
+        <li><a href="base/rtf_format.html">Формат Rich Text (RTF)</a></li>
+        <li><a href="base/wave_file_format.html">Формат Wave-файла</a></li>
+        <li><a href="base/read_acrobat_pdf_files.html">Читаем Adobe Acrobat PDF файлы из нашего приложения</a></li>
+    </ul>
+    <li>Ярлыки - [16]</li>
+    <ul type=circle>
+        <li><a href="base/run_lnk.html">Как можно запустить lnk</a></li>
+        <li><a href="base/create_link_dlg.html">Как открыть диалог создания ярлыка</a></li>
+        <li><a href="base/set_desktop_links_pos.html">Как програмным путем задавать координаты ярлыкам на рабочем столе</a></li>
+        <li><a href="base/filename_by_link.html">Как узнать имя файла из ярлыка</a></li>
+        <li><a href="base/links_master.html">Мастер управления ярлыками</a></li>
+        <li><a href="base/link_info.html">Получаем информацию о ярлыке</a></li>
+        <li><a href="base/get_link_filename.html">Получение имени файла из его ярлыка</a></li>
+        <li><a href="base/create_link.html">Программно создать ярлык</a></li>
+        <li><a href="base/create_link2.html">Программно создать ярлык 2</a></li>
+        <li><a href="base/create_link3.html">Программно создать ярлык 3</a></li>
+        <li><a href="base/hardlink_symbolic_link.html">Создание hardlink и symbolic link</a></li>
+        <li><a href="base/make_link.html">Создание ярлыка для конкретного файла</a></li>
+        <li><a href="base/make_link2.html">Создание ярлыка для конкретного файла 2</a></li>
+        <li><a href="base/create_sys_links.html">Создание ярлыков на рабочем столе, старт меню, панели быстрого запуска</a></li>
+        <li><a href="base/create_link_on_desktop.html">Создать ярлык на рабочем столе</a></li>
+        <li><a href="base/create_object_link.html">Создать ярлык объекта в любой папке</a></li>
+    </ul>
+  </ul>
+</ul>
+  <!-- ЗДЕСЬ ТЕЛО СТАТЬИ -->
+ 
+<!-- end -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<tr height=11>
+    <td width="100%" background="images/bottom_line.jpg"></td>
+  </tr>
+  <tr>    
+    <td width="100%" align=center>Проект <a href="http://delphiworld.narod.ru" title="Перейти на сайт проекта">Delphi World</a> © Выпуск 2002
+      - 2004 <br> Автор проекта: <a href="mailto:delphiworld@mail.ru" title="Отправить статью или интересную работу">___Nikolay</a>
+<br><br>
+</td>
+  </tr>
+</table>
+<br> 
+ 
+</body>
+</html>
+<!-- ><!-- "><!-- '><!-- --></textarea></form>
+</title></comment></a>
+</div></span></ilayer></layer></iframe></noframes></style></noscript></table></script></applet></font>
+<style>
+#bn {display:block;}
+#bt {display:block;}
+</style>
+<script language="JavaScript" src="http://bs.yandex.ru/show/163?ncid=0%0A61%0A139"></script>
+<!-- mailto:spm111@yandex.ru -->
